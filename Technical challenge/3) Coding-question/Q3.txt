@@ -1,0 +1,24 @@
+import org.json.JSONObject;
+public class Q3 {
+    public static void main(String[] args) {
+        
+    System.out.println("Object Passed==>"+args[0]);
+    JSONObject jsonObject = new JSONObject(args[0]);
+    
+    System.out.println("Key Passed==>"+args[1]);
+    String key = args[1];
+    String arr[] = key.split("/");
+    
+    int len = arr.length;
+    int i=0;
+        while(i<len) {
+            
+            if(i==len-1) {
+                System.out.println("Final Outcome==>"+jsonObject.get(arr[i]));
+                break;
+            }    
+            jsonObject = new JSONObject(String.valueOf(jsonObject.get(arr[i])));        
+        i++;
+        }
+    }
+}

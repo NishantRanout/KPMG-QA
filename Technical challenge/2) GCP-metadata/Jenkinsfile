@@ -1,0 +1,43 @@
+pipeline {
+    agent {
+          node('jenkins-agent-base-311')
+       }
+
+stages {
+        stage('Metadata GCP') {
+            steps {
+                echo '..........................Starting connection..........................'
+                script{ 
+
+                    timeout(time: 60, unit: 'MINUTES') { 
+                     
+                        withCredentials([string(credentialsId: 'GCP-Auth', variable: 'auth_id')]) {
+             
+                        
+
+                    
+                        echo '..........................get the Value..........................'
+
+                        def json_response = sh(script:'curl ""http://metadata.google.internal/computeMetadata/v1/instance/image" -H "Metadata-Flavor:      Google" --header "Authorization: Basic $auth_id"', returnStdout: true)
+
+                        echo json_response
+
+                        def value_json = readJSON text: json_response
+                        i = 0 
+                        list = "${value_json.'elements'.'name'}"
+                        echo list
+
+                        def metadata_value = " "
+                        list.each{                                                 
+                            if ("${value_json.'elements'.'name'[i]}" == "name") {
+                                echo "${value_json.'elements'.'name'[i]}"
+                                echo "${value_json.'elements'.'id'[i]}"
+                                metadata_value = "${value_json.'elements'.'id'[i]}"
+                                println("metadata_value : $metadata_value")
+                                }
+                            i++
+                        }
+                 }
+           }
+ 
+     }
